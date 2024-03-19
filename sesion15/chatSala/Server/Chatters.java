@@ -36,14 +36,14 @@ public class Chatters {
     }
 
     // metodo para eliminar un usuario
-    public void eliminatePerson(String username) {
-        for (Person person : clientes) {
-            if (person.getName().equals(username)) {
-                clientes.remove(person);
-                System.out.println("persona eliminada");
-            }
+    public void eliminatePerson(Person person) {
+        boolean exist = userExist(person.getName());
+        if (exist == true) {
+            clientes.remove(person);
+            System.out.println("persona eliminada");
+        } else {
+            System.out.println("no existe");
         }
-        System.out.println("persona no existe");
     }
 
     // metodo para enviar un mensaje a todos los usuarios
