@@ -18,7 +18,7 @@ public class Server {
 
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Nuevo cliente conectado: " + clientSocket);
+                System.out.println("Nuevo cliente conectado");
 
                 // crea el objeto para gestionar al cliente y le envia la informacion necesaria
                 ClientHandler clientHandler = new ClientHandler(clientSocket, clientes);

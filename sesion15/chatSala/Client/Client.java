@@ -28,7 +28,7 @@ public class Client {
 
                 // Esperar la respuesta del servidor
                 String response = in.readLine();
-                if (response.equals("Aceptado")) {
+                if (response.equals("Usuario aceptado.")) {
                     System.out.println("Nombre de usuario aceptado.");
                     break;
                 } else {

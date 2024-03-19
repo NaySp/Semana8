@@ -11,14 +11,15 @@ class ClientHandler implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
     private String clientName;
-    Chatters clientes;
+    private Chatters clientes;
 
     public ClientHandler(Socket socket, Chatters clientes) {
-        this.clientSocket = socket;
-        this.clientes = clientes;
         try {
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            // Asignar los objetos recibidos a los atributos de la clase
+            this.clientSocket = socket;
+            this.clientes = clientes;
+            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -27,35 +28,39 @@ class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            out.println("Enter your username:");
+            // Solicitar al cliente un nombre de usuario
+            out.println("Ingrese su nombre de usuario: ");
             clientName = in.readLine();
 
-            // Validate username
+            // Verificar si el nombre de usuario ya está en uso
             while (clientes.userExist(clientName)) {
-                out.println("Username already taken. Please enter a different username:");
+                out.println("El nombre de usuario ya está en uso. Ingrese otro: ");
                 clientName = in.readLine();
             }
 
-            // Notify all clients about the new user
-            clientes.sendMessageToall(clientName + " has joined.");
+            // Notificar a los demás clientes que un nuevo usuario se ha unido
+            clientes.sendMessageToall(clientName + " se ha unido al chat.");
 
-            // Add the new user to the list of clients
-            clientes.addUser(new Person(clientName, out));
+            // Agregar al nuevo usuario a la lista de clientes
+            Person newClient = new Person(clientName, out);
+            clientes.addUser(newClient);
 
-            // Notify the new user that they've been accepted
-            out.println("Welcome, " + clientName + "!");
+            // Notificar al cliente que su nombre de usuario ha sido aceptado
+            out.println("Usuario aceptado.");
 
-            // Handle messages from the client
             String message;
+            // Escuchar y retransmitir los mensajes del cliente
             while ((message = in.readLine()) != null) {
+                // Enviar el mensaje a todos los usuarios
                 clientes.sendMessageToall(clientName + ": " + message);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            // Remove the client when they disconnect
+            // Cuando el cliente se desconecta, eliminarlo de la lista de clientes
             clientes.eliminatePerson(new Person(clientName, out));
-            clientes.sendMessageToall(clientName + " has left.");
+            clientes.sendMessageToall(clientName + " se ha desconectado.");
             try {
                 clientSocket.close();
             } catch (IOException e) {

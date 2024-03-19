@@ -27,10 +27,10 @@ public class Chatters {
     public void addUser(Person person) {
         boolean exist = userExist(person.getName());
         if (exist == true) {
-            System.out.println("persona ya existe");
+            person.out.println("persona ya existe");
         } else {
             clientes.add(person);
-            System.out.println("persona agragada");
+            System.out.println("Aceptado");
         }
 
     }
